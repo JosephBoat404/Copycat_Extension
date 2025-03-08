@@ -16,15 +16,18 @@ document.addEventListener('DOMContentLoaded', function() {
     loadSavedInfo();
     
     // Save new information
-    document.getElementById('save-btn').addEventListener('click', saveInfo);
+    document.getElementById('info-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      saveInfo();
+    });
   });
   
   function openTab(tabName) {
-    const tabcontent = document.getElementsByClassName('tabcontent');
-    for (let i = 0; i < tabcontent.length; i++) {
-      tabcontent[i].style.display = 'none';
+    const tabcontents = document.getElementsByClassName('tabcontent');
+    for (let i = 0; i < tabcontents.length; i++) {
+      tabcontents[i].classList.remove('active');
     }
-    document.getElementById(tabName).style.display = 'block';
+    document.getElementById(tabName).classList.add('active');
   }
   
   function loadSavedInfo() {
@@ -41,13 +44,17 @@ document.addEventListener('DOMContentLoaded', function() {
           const infoItem = document.createElement('div');
           infoItem.className = 'info-item';
           infoItem.innerHTML = `
-            <strong>${item.name}</strong>
-            <p>${item.value.length > 30 ? item.value.substring(0, 30) + '...' : item.value}</p>
-            <button class="delete-btn" data-index="${index}">×</button>
+            <div class="info-content">
+              <div class="info-label">${item.name}</div>
+              <div class="info-value">${item.value}</div>
+            </div>
+            <button class="delete-btn" data-index="${index}" title="Delete">
+              <i class="fas fa-trash-alt"></i>
+            </button>
           `;
           
           infoItem.addEventListener('click', function(e) {
-            if (!e.target.classList.contains('delete-btn')) {
+            if (!e.target.closest('.delete-btn')) {
               copyToClipboard(item.value);
             }
           });
@@ -86,9 +93,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         chrome.storage.sync.set({ 'savedInfo': savedInfo }, function() {
+          // Clear form
           nameInput.value = '';
           valueInput.value = '';
           
+          // Switch to view tab
           openTab('view-info');
           document.getElementById('view-tab').classList.add('active');
           document.getElementById('add-tab').classList.remove('active');
@@ -115,22 +124,40 @@ document.addEventListener('DOMContentLoaded', function() {
   
   function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(function() {
-      // Show a temporary success message
-      const statusDiv = document.createElement('div');
-      statusDiv.textContent = 'Copied!';
-      statusDiv.style.position = 'fixed';
-      statusDiv.style.bottom = '10px';
-      statusDiv.style.left = '50%';
-      statusDiv.style.transform = 'translateX(-50%)';
-      statusDiv.style.backgroundColor = '#4CAF50';
-      statusDiv.style.color = 'white';
-      statusDiv.style.padding = '5px 10px';
-      statusDiv.style.borderRadius = '5px';
-      
-      document.body.appendChild(statusDiv);
-      
-      setTimeout(function() {
-        document.body.removeChild(statusDiv);
-      }, 2000);
+      showNotification('Copied to clipboard!');
     });
+  }
+
+  function showNotification(message) {
+    const statusDiv = document.createElement('div');
+    statusDiv.innerHTML = `
+      <i class="fas fa-check-circle"></i>
+      <span>${message}</span>
+    `;
+    statusDiv.style.position = 'fixed';
+    statusDiv.style.bottom = '24px';
+    statusDiv.style.left = '50%';
+    statusDiv.style.transform = 'translateX(-50%)';
+    statusDiv.style.background = 'linear-gradient(135deg, #333333 0%, #666666 100%)';
+    statusDiv.style.color = '#FFFFFF';
+    statusDiv.style.padding = '12px 20px';
+    statusDiv.style.borderRadius = '8px';
+    statusDiv.style.fontSize = '14px';
+    statusDiv.style.fontWeight = '600';
+    statusDiv.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.3)';
+    statusDiv.style.zIndex = '1000';
+    statusDiv.style.display = 'flex';
+    statusDiv.style.alignItems = 'center';
+    statusDiv.style.gap = '8px';
+    statusDiv.style.backdropFilter = 'blur(10px)';
+    
+    document.body.appendChild(statusDiv);
+    
+    setTimeout(function() {
+      statusDiv.style.opacity = '0';
+      statusDiv.style.transform = 'translate(-50%, 10px)';
+      statusDiv.style.transition = 'all 0.2s ease';
+      
+      setTimeout(() => document.body.removeChild(statusDiv), 200);
+    }, 2000);
   }

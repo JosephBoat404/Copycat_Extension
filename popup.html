@@ -4,33 +4,51 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quick Info</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>Quick Info</h1>
-  
-  <div class="tab" role="tablist">
-    <button class="tablinks active" id="view-tab" role="tab" aria-selected="true" aria-controls="view-info">View Info</button>
-    <button class="tablinks" id="add-tab" role="tab" aria-selected="false" aria-controls="add-info">Add Info</button>
-  </div>
-  
-  <div id="view-info" class="tabcontent" style="display: block;" role="tabpanel" aria-labelledby="view-tab">
-    <div id="info-list" role="list">
-      <!-- Items will be populated here -->
+  <div class="popup-container">
+    <div class="app-header">
+      <h1><i class="fas fa-clipboard-list"></i> Quick Info</h1>
     </div>
-    <p id="empty-list-message" style="display: none;">No saved information. Click "Add Info" to get started.</p>
-  </div>
-  
-  <div id="add-info" class="tabcontent" role="tabpanel" aria-labelledby="add-tab">
-    <form id="info-form">
-      <label for="info-name">Label:</label>
-      <input type="text" id="info-name" placeholder="e.g., Work Email, Phone Number" aria-required="true">
-      
-      <label for="info-value">Value:</label>
-      <textarea id="info-value" rows="3" placeholder="Information to be copied" aria-required="true"></textarea>
-      
-      <button id="save-btn" type="submit">Save Information</button>
-    </form>
+    
+    <div class="tab" role="tablist">
+      <button class="tablinks active" id="view-tab" role="tab" aria-selected="true" aria-controls="view-info">
+        <i class="fas fa-list"></i> View Info
+      </button>
+      <button class="tablinks" id="add-tab" role="tab" aria-selected="false" aria-controls="add-info">
+        <i class="fas fa-plus"></i> Add Info
+      </button>
+    </div>
+    
+    <div id="view-info" class="tabcontent active" role="tabpanel" aria-labelledby="view-tab">
+      <div id="info-list" role="list">
+        <!-- Items will be populated here -->
+      </div>
+      <p id="empty-list-message" style="display: none;">
+        <i class="far fa-folder-open"></i>
+        No saved information yet
+      </p>
+    </div>
+    
+    <div id="add-info" class="tabcontent" role="tabpanel" aria-labelledby="add-tab">
+      <form id="info-form">
+        <div class="input-group">
+          <label for="info-name"><i class="fas fa-tag"></i> Label</label>
+          <input type="text" id="info-name" placeholder="e.g., Work Email, Phone Number" aria-required="true">
+        </div>
+        
+        <div class="input-group">
+          <label for="info-value"><i class="fas fa-pen"></i> Value</label>
+          <textarea id="info-value" rows="3" placeholder="Information to be copied" aria-required="true"></textarea>
+        </div>
+        
+        <button id="save-btn" type="submit">
+          <i class="fas fa-save"></i> Save Information
+        </button>
+      </form>
+    </div>
   </div>
   <script src="popup.js"></script>
 </body>
