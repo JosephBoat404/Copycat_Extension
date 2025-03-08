@@ -3,9 +3,19 @@
     "name": "Quick Info",
     "version": "1.0",
     "description": "Quickly access and copy frequently used information for forms",
+    "icons": {
+        "16": "icons/icon16.png",
+        "48": "icons/icon48.png",
+        "128": "icons/icon128.png"
+    },
     "permissions": ["storage", "activeTab", "clipboardWrite"],
     "action": {
-      "default_popup": "popup.html"
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "icons/icon16.png",
+            "48": "icons/icon48.png",
+            "128": "icons/icon128.png"
+        }
     },
     "content_scripts": [
       {
